@@ -13,6 +13,9 @@ app.use(session({
   saveUninitialized: true,
 }));
 
+// Special characters
+const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
 // Dummy database for demo
 const users = {};
 
@@ -30,6 +33,11 @@ app.post('/login', async (req, res) => {
   // Check if the password meets requirements
   if (!password || password.length < 8) {
     return res.send('Password must be at least 8 characters long.');
+  }
+
+  // Check for special character
+  if(!specialChar.test(password)){
+    return res.send('Must include at least 1 special character: !@#$%^&*(),.?":{}|<>');
   }
 
   if (users[username]) {

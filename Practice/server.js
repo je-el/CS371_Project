@@ -16,6 +16,10 @@ app.use(session({
 // Special characters
 const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
 
+// Failed attempts
+const maxFailedAttempts = 5;
+const failedAttempts = {};
+
 // Dummy database for demo
 const users = {};
 
@@ -30,6 +34,11 @@ app.use(express.static('public'));
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   
+  if (failedAttempts[username] >= maxFailedAttempts) {
+    delete users[username]; // Delete the user from the database
+    delete failedAttempts[username]; // Reset the failed attempts counter
+    return res.send('Your account has been deleted due to multiple failed login attempts.');
+  }
   // Check if the password meets requirements
   if (!password || password.length < 8) {
     return res.send('Password must be at least 8 characters long.');
@@ -45,8 +54,12 @@ app.post('/login', async (req, res) => {
     const match = await bcrypt.compare(password, users[username]);
     if (match) {
       req.session.user = username;
+      // Reset failed attempts counter upon successful login
+      delete failedAttempts[username];
       res.send('Logged in successfully!');
     } else {
+      // increment failed attempts counter
+      failedAttempts[username] = (failedAttempts[username] || 0) + 1;
       res.send('Incorrect password.');
     }
   } else {

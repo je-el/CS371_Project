@@ -42,7 +42,14 @@ input[type="password"] {
     background-color: #fff;
 }
 
-button {
+.button-container {
+    display: flex;
+    justify-content: space-between;
+
+  }
+  
+  .loginbutton {
+    
     width: calc(100% - 20px); /* Adjust width to account for padding */
     padding: 10px;
     border: none;
@@ -52,7 +59,20 @@ button {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+  }
+  
+  .signupbutton {
+    
+    width: calc(100% - 20px); /* Adjust width to account for padding */
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #9d9d0d;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
 button:hover {
     background-color: #c8d511;
